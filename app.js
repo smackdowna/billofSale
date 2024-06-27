@@ -3,9 +3,7 @@ import { config } from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-config({
-  path: "./config/config.env",
-});
+config();
 
 const app = express();
 
@@ -29,10 +27,11 @@ app.use(
 //Importing and using Routes
 
 import admin from "./routes/adminRoutes.js";
-
+import form from "./routes/formRoutes.js";
 import ErrorMiddleware from "./middlewares/Error.js";
 
 app.use("/api/v1", admin);
+app.use("/api/v1", form);
 
 export default app;
 
