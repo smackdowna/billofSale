@@ -28,10 +28,12 @@ app.use(
 
 import admin from "./routes/adminRoutes.js";
 import form from "./routes/formRoutes.js";
+import comment from "./routes/commentRoutes.js";
 import ErrorMiddleware from "./middlewares/Error.js";
 
 app.use("/api/v1", admin);
 app.use("/api/v1", form);
+app.use("/api/v1", comment);
 
 export default app;
 
