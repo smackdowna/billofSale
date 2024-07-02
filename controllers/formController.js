@@ -32,7 +32,7 @@ export const createForm = catchAsyncError(async (req, res, next) => {
   try {
     const { name, description, state } = req.body;
     const files = req.files;
-    
+
     const folder = "forms";
     const formFiles = [];
 
@@ -76,5 +76,29 @@ export const createForm = catchAsyncError(async (req, res, next) => {
       success: false,
       message: "Internal Server Error",
     });
+  }
+});
+
+export const getFormsByState = catchAsyncError(async (req, res, next) => {
+  const { state } = req.params;
+  const form = await Forms.find({ state });
+  if (!form) return next(new ErrorHandler("Form not found", 404));
+  res.status(200).json({
+    success: true,
+    form,
+  });
+});
+
+export const returnState = catchAsyncError(async (req, res, next) => {
+  try {
+    const states = await Forms.find().distinct("state");
+    console.log("states" + states);
+    if (!states) return next(new ErrorHandler("States not found", 404));
+    res.status(200).json({
+      success: true,
+      states,
+    });
+  } catch (error) {
+    console.log("Error getting states:", error);
   }
 });

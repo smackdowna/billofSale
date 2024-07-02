@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 config();
 
@@ -15,6 +16,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(morgan("dev"));
 
 app.use(
   cors({
