@@ -39,7 +39,7 @@ export const createForm = catchAsyncError(async (req, res, next) => {
     if (!name || !description || !state) {
       return res.status(400).json({
         success: false,
-        message: "Name, description, and state are required.",
+        message: "Name, description and  state are required.",
       });
     }
 
@@ -88,7 +88,14 @@ export const getFormsByState = catchAsyncError(async (req, res, next) => {
     form,
   });
 });
-
+export const returnFormName = catchAsyncError(async (req, res, next) => {
+  const form = await Forms.find().select("_id formName");
+  if (!form) return next(new ErrorHandler("Form not found", 404));
+  res.status(200).json({
+    success: true,
+    form,
+  });
+});
 export const returnState = catchAsyncError(async (req, res, next) => {
   try {
     const states = await Forms.find().distinct("state");
