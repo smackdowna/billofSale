@@ -6,7 +6,9 @@ import { deleteImage, uploadImage } from "../utils/imageUploadHandler.js";
 import ApiFeatures from "../utils/apiFeatures.js";
 
 export const getAllForms = catchAsyncError(async (req, res, next) => {
-  const apiFeatures = new ApiFeatures(Forms.find(), req.query);
+  const apiFeatures = new ApiFeatures(Forms.find(), req.query)
+    .search()
+    .filter();
   const resultPerPage = 10;
   let forms = await apiFeatures.query;
   let filteredFormsCount = await forms.length;

@@ -36,5 +36,5 @@ const schema = new mongoose.Schema({
     index: true,
   },
 });
-
+schema.index({ formName: "text", description: "text" });
 export const Forms = mongoose.model("Forms", schema);
