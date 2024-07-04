@@ -15,7 +15,18 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "Please Enter Meta Description"],
     },
-
+    thumbnail: [
+      {
+        fileId: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     forms: [
       {
         type: mongoose.Schema.Types.ObjectId,

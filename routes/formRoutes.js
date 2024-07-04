@@ -11,9 +11,10 @@ import {
   returnState,
 } from "../controllers/formController.js";
 import multipleUpload from "../middlewares/multipleUpload.js";
+import singleUpload from "../middlewares/multer.js";
 const router = express.Router();
 
-router.route("/uploadForm").post(isAuthenticated, createForm);
+router.route("/uploadForm").post(isAuthenticated, singleUpload, createForm);
 router.route("/state").post(isAuthenticated, multipleUpload, addState);
 router.route("/forms").get(getAllForms);
 router.route("/forms/state/:state").get(getFormsByState);
