@@ -29,16 +29,26 @@ export const returnState = catchAsyncError(async (req, res, next) => {
 
 export const createForm = catchAsyncError(async (req, res, next) => {
   const { formName, description, metaDescription } = req.body;
+  const file = req.file;
   if (!formName || !description || !metaDescription) {
     return res.status(400).json({
       success: false,
       message: "Name, description and  metadescription are required.",
     });
   }
+  const fileUri = getDataUri(file);
+  const folder = "thumbnails";
+  let thumbnails = [];
+  const upload = await uploadImage(fileUri.content, fileUri.fileName, folder);
+  thumbnails.push({
+    fileId: upload.fileId,
+    url: upload.url,
+  });
   const form = await Forms.create({
     formName,
     description,
     metaDescription,
+    thumbnail: thumbnails,
   });
   res.status(201).json({
     success: true,
@@ -76,7 +86,6 @@ export const addState = catchAsyncError(async (req, res, next) => {
       formFiles.push({
         fileId: upload.fileId,
         url: upload.url,
-        thumbnailUrl: upload.thumbnailUrl,
       });
     }
   }
@@ -131,6 +140,7 @@ export const deleteForm = catchAsyncError(async (req, res, next) => {
     }
   }
   DeleteForms(form.forms);
+  deleteImage(form.thumbnail[0].fileId);
   await form.deleteOne();
   res.status(200).json({
     success: true,
