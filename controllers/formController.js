@@ -6,27 +6,26 @@ import getDataUri from "../utils/dataUri.js";
 import { deleteImage, uploadImage } from "../utils/imageUploadHandler.js";
 import ApiFeatures from "../utils/apiFeatures.js";
 
-// export const returnFormName = catchAsyncError(async (req, res, next) => {
-//   const form = await Forms.find().select("_id formName");
-//   if (!form) return next(new ErrorHandler("Form not found", 404));
-//   res.status(200).json({
-//     success: true,
-//     form,
-//   });
-// });
-// export const returnState = catchAsyncError(async (req, res, next) => {
-//   try {
-//     const states = await Forms.find().distinct("state");
-//     console.log("states" + states);
-//     if (!states) return next(new ErrorHandler("States not found", 404));
-//     res.status(200).json({
-//       success: true,
-//       states,
-//     });
-//   } catch (error) {
-//     console.log("Error getting states:", error);
-//   }
-// });
+export const returnFormName = catchAsyncError(async (req, res, next) => {
+  const form = await Forms.find().select("_id formName");
+  if (!form) return next(new ErrorHandler("Form not found", 404));
+  res.status(200).json({
+    success: true,
+    form,
+  });
+});
+export const returnState = catchAsyncError(async (req, res, next) => {
+  try {
+    const states = await State.find().distinct("stateName");
+    if (!states) return next(new ErrorHandler("States not found", 404));
+    res.status(200).json({
+      success: true,
+      states,
+    });
+  } catch (error) {
+    console.log("Error getting states:", error);
+  }
+});
 
 export const createForm = catchAsyncError(async (req, res, next) => {
   const { formName, description, metaDescription } = req.body;
@@ -142,30 +141,24 @@ export const deleteForm = catchAsyncError(async (req, res, next) => {
 
 export const getFormsByState = catchAsyncError(async (req, res, next) => {
   const { state } = req.params;
-
-  // Find states by name
   const stateDocs = await State.find({ stateName: state });
-  console.log(stateDocs);
   if (stateDocs.length === 0) {
     return next(new ErrorHandler("State not found", 404));
   }
 
-  let forms = [];
-  for (const stateDoc of stateDocs) {
-    const formData = await Forms.find({ stateId: stateDoc._id }).populate(
-      "forms",
-    );
-    console.log(formData);
-    if (formData.length > 0) {
-      forms = forms.concat(formData);
+  const result = [];
+
+  for (const state of stateDocs) {
+    let form = await Forms.findOne({
+      forms: { $in: [state._id] },
+    }).populate("forms");
+    if (form) {
+      result.push(form);
     }
-  }
-  if (forms.length === 0) {
-    return next(new ErrorHandler("Forms not found for the given state", 404));
   }
 
   res.status(200).json({
     success: true,
-    forms,
+    result,
   });
 });
