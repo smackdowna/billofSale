@@ -50,7 +50,7 @@ export const getCommentById = catchAsyncError(async (req, res, next) => {
 });
 
 export const deleteComment = catchAsyncError(async (req, res, next) => {
-  const comment = await Comments.findById(req.params.id);
+  const comment = await Comments.find(req.params.id);
   if (!comment) return next(new ErrorHandler("Comment not found", 404));
   await comment.remove();
   res.status(200).json({
