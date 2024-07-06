@@ -39,7 +39,7 @@ export const getAllComments = catchAsyncError(async (req, res, next) => {
 });
 
 export const getCommentById = catchAsyncError(async (req, res, next) => {
-  const comment = await Comments.findOne({
+  const comment = await Comments.find({
     formId: req.params.id,
   });
   if (!comment) return next(new ErrorHandler("Comment not found", 404));

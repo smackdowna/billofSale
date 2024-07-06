@@ -20,7 +20,10 @@ app.use(morgan("dev"));
 
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "http://localhost:3004",
+      "https://bill-of-sales-frontend.vercel.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "DELETE", "PUT"],
   })
