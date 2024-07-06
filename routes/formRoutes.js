@@ -9,6 +9,7 @@ import {
   getFormsByState,
   returnFormName,
   returnState,
+  getCountNumber,
 } from "../controllers/formController.js";
 import multipleUpload from "../middlewares/multipleUpload.js";
 import singleUpload from "../middlewares/multer.js";
@@ -22,5 +23,6 @@ router.route("/forms/states").get(returnState);
 router.route("/forms/formName").get(returnFormName);
 router.route("/forms/:id").get(getFormById);
 router.route("/forms/:id").delete(isAuthenticated, deleteForm);
+router.route("/count").get(isAuthenticated, getCountNumber);
 
 export default router;
