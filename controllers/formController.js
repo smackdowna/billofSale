@@ -5,6 +5,7 @@ import { State } from "../models/state.js";
 import getDataUri from "../utils/dataUri.js";
 import { deleteImage, uploadImage } from "../utils/imageUploadHandler.js";
 import ApiFeatures from "../utils/apiFeatures.js";
+import { Comments } from "../models/comment.js";
 
 export const returnFormName = catchAsyncError(async (req, res, next) => {
   const form = await Forms.find().select("_id formName");
@@ -81,7 +82,7 @@ export const addState = catchAsyncError(async (req, res, next) => {
       const upload = await uploadImage(
         fileUri.content,
         fileUri.fileName,
-        folder,
+        folder
       );
       formFiles.push({
         fileId: upload.fileId,
@@ -170,5 +171,18 @@ export const getFormsByState = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     result,
+  });
+});
+
+export const getCountNumber = catchAsyncError(async (req, res, next) => {
+  const forms = await Forms.find().populate("forms");
+  const formCount = forms.length;
+  const stateCount = await State.find().countDocuments();
+  const commentsCount = await Comments.find().countDocuments();
+  res.status(200).json({
+    success: true,
+    formCount,
+    stateCount,
+    commentsCount,
   });
 });
